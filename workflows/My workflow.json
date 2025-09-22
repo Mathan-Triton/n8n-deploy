@@ -1,0 +1,329 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sheet/upload",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        -224
+      ],
+      "id": "ad58ce5b-1c50-4724-ac3b-51ea9b5bd2af",
+      "name": "Webhook",
+      "webhookId": "d0cdb706-d036-4256-bc0d-e482893938ef"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        80,
+        0
+      ],
+      "id": "42547e93-ad3b-43e5-a032-d2e5081916ba",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-1.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-1.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=ou are an invoice parser AI. You will ONLY extract values from the given input text.\nDo not create or imagine values. If a field is not present, leave it as an empty string.\n \nInput Text:\n{{ $json[\"text\"] }}\n \nExpected JSON Output:\n{\n  \"Invoice No\": \"\",\n  \"Invoice Date\": \"\",\n  \"Customer No\": \"\",\n  \"Order No\": \"\",\n  \"Delivery No\": \"\",\n  \"Customer Name\": \"\",\n  \"Address\": \"\",\n  \"Items\": [\n    {\n      \"Item\": \"\",\n      \"Product Number\": \"\",\n      \"Description\": \"\",\n      \"Quantity\": \"\",\n      \"Unit\": \"\",\n      \"Unit Price (USD)\": \"\",\n      \"Total (USD)\": \"\"\n    }\n  ]\n}\n \n⚠️ Rules:\n- Return only valid JSON.\n- Parse ALL items (do not stop after 2).\n- Use exactly the text provided in Input Text, don’t make up values."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -144
+      ],
+      "id": "522989ba-d7f9-462c-afed-f2f4d359f5ad",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "iOK241rVUXMEEXQv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Kfcz0wTtjcRErt0SUWhbRboCb8TjVbgLSbmduhuRKxw",
+          "mode": "list",
+          "cachedResultName": "Demo invoice",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Kfcz0wTtjcRErt0SUWhbRboCb8TjVbgLSbmduhuRKxw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Kfcz0wTtjcRErt0SUWhbRboCb8TjVbgLSbmduhuRKxw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Item": "={{ $json.Item }}",
+            "ProductNumber": "={{ $json['Product Number'] }}",
+            "Descripition": "={{ $json.Description }}",
+            "Quantity": "={{ $json.Quantity }}",
+            "Unit": "={{ $json.Unit }}",
+            "UnitPrice": "={{ $json['Unit Price (USD)'] }}",
+            "Invoice No": "={{ $json['Invoice No'] }}",
+            "Date": "={{ $json['Invoice Date'] }}",
+            "CustomerNo": "={{ $json['Customer No'] }}",
+            "OrderNo": "={{ $json['Order No'] }}",
+            "DeliveryNo": "={{ $json['Delivery No'] }}",
+            "Address": "={{ $json.Address }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ProductNumber",
+              "displayName": "ProductNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripition",
+              "displayName": "Descripition",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Quantity",
+              "displayName": "Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Unit",
+              "displayName": "Unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UnitPrice",
+              "displayName": "UnitPrice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Invoice No",
+              "displayName": "Invoice No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CustomerNo",
+              "displayName": "CustomerNo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "OrderNo",
+              "displayName": "OrderNo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DeliveryNo",
+              "displayName": "DeliveryNo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        688,
+        0
+      ],
+      "id": "6f3e601e-ad9a-451c-b988-10951e6b4839",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hSZX2Et1f3m8pHAC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"data added successfully\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        848,
+        -240
+      ],
+      "id": "a375d1c0-1636-4b41-8039-d7b1672d4a63",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1️⃣ Get text from previous node safely\nlet rawText = $json.content?.parts?.[0]?.text || $json.text || null;\n\nif (!rawText) {\n    return [{ json: { error: \"No text found from previous node\" } }];\n}\n\n// 2️⃣ Remove code block markers\nrawText = rawText.replace(/```json|```/g, '').trim();\n\n// 3️⃣ Extract all JSON objects using regex\nconst jsonBlocks = rawText.match(/\\{[\\s\\S]*?\\}(?=\\s*\\{|\\s*$)/g);\n\nif (!jsonBlocks || jsonBlocks.length === 0) {\n    return [{ json: { error: \"No valid JSON found in text\" } }];\n}\n\n// 4️⃣ Combine all Items into one array (with unique check)\nlet allItems = [];\nlet uniqueSet = new Set(); // for duplicates check\n\nfor (let block of jsonBlocks) {\n    try {\n        let parsed = JSON.parse(block);\n\n        // Skip if no Items\n        if (!parsed.Items || !Array.isArray(parsed.Items)) continue;\n\n        let mapped = parsed.Items.map(item => {\n            let obj = {\n                \"Invoice No\": parsed[\"Invoice No\"] || null,\n                \"Invoice Date\": parsed[\"Invoice Date\"] || null,\n                \"Customer No\": parsed[\"Customer No\"] || null,\n                \"Order No\": parsed[\"Order No\"] || null,\n                \"Delivery No\": parsed[\"Delivery No\"] || null,\n                \"Customer Name\": parsed[\"Customer Name\"] || null,\n                \"Address\": parsed[\"Address\"] || null,\n                \"Item\": item[\"Item\"] || null,\n                \"Product Number\": item[\"Product Number\"] || null,\n                \"Description\": item[\"Description\"] || null,\n                \"Quantity\": item[\"Quantity\"] || null,\n                \"Unit\": item[\"Unit\"] || null,\n                \"Unit Price (USD)\": item[\"Unit Price (USD)\"] || null,\n                \"Total (USD)\": item[\"Total (USD)\"] || null\n            };\n\n            // ✅ Unique Key (Invoice No + Item)\n            let uniqueKey = `${obj[\"Invoice No\"]}-${obj[\"Item\"]}`;\n\n            if (!uniqueSet.has(uniqueKey)) {\n                uniqueSet.add(uniqueKey);\n                return obj;\n            } else {\n                return null; // skip duplicate\n            }\n        }).filter(x => x !== null);\n\n        allItems.push(...mapped);\n    } catch (e) {\n        // Skip invalid JSON blocks\n    }\n}\n\n// 5️⃣ Check if we have items\nif (allItems.length === 0) {\n    return [{ json: { error: \"No Items found after processing all JSON blocks\" } }];\n}\n\n// 6️⃣ Return for n8n\nreturn allItems.map(i => ({ json: i }));\n "
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        -224
+      ],
+      "id": "df512a5e-6f1f-43ca-8ffe-babf8e568e11",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1aa17bb5-e656-4a73-a62d-1df238caa6f5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd652c8bd7bc780996e711da25c48cdc0a0f21c6614ca3cc1cbeff2bd7d8aba5"
+  },
+  "id": "dk1MalmAdAHiJGct",
+  "tags": []
+}
