@@ -2,6 +2,8 @@ FROM n8nio/n8n
 
 # Set timezone
 ENV GENERIC_TIMEZONE=Asia/Kolkata
+ENV N8N_PORT=5678
 
-# Expose n8n default port
 EXPOSE 5678
+
+CMD ["n8n", "start"]
