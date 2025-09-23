@@ -1,7 +1,14 @@
 [build]
-builder = "DOCKERFILE"
+builder = "Docker"
 
 [deploy]
+startCommand = "n8n start"
 healthcheckPath = "/"
-healthcheckTimeout = 200
-restartPolicyType = "ON_FAILURE"
+healthcheckTimeout = 300
+
+[env]
+PORT = "5678"
+GENERIC_TIMEZONE = "Asia/Kolkata"
+N8N_BASIC_AUTH_ACTIVE = "true"
+N8N_BASIC_AUTH_USER = "admin"
+N8N_BASIC_AUTH_PASSWORD = "admin"
