@@ -1,0 +1,8 @@
+[build]
+builder = "Docker"
+
+[deploy]
+startCommand = "n8n start"
+
+[service]
+port = 5678
