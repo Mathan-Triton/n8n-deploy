@@ -1,8 +1,7 @@
-[build]
-builder = "Docker"
+FROM n8nio/n8n
 
-[deploy]
-startCommand = "n8n start"
+# Set timezone
+ENV GENERIC_TIMEZONE=Asia/Kolkata
 
-[service]
-port = 5678
+# Expose n8n default port
+EXPOSE 5678
